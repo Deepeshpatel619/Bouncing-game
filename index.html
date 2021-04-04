@@ -1,0 +1,210 @@
+<!--under development-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"></meta>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+           <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+           <style>
+               body {
+    
+}
+#show{
+display:none;
+}
+#start{
+    left:35%;
+}
+#score{
+    left:10px;
+    top:5px;
+    width:100px;
+    height:50px;
+    padding:10px;
+    background-color:green;
+    margin-bottom:5px;
+}
+.display{
+    width:;
+    height:300px;
+    position:relative ;
+}
+#canvas1{
+    background-color:rgba(33,33,31,0.5);
+}
+#box1{
+top:90%;
+left:;
+position:absolute;
+width:100px;
+height:10px;
+background-color:red;
+border:2px solid black;
+
+}
+
+button{
+ position:relative ;
+ width:30%;
+ padding:10px;  
+ margin:2px;
+ 
+ 
+}
+.keys{
+    display:grid;
+}
+#top{left:30%;}
+#right{
+    margin-left:30%;
+
+}
+#down{
+    left:30%;
+}
+           </style>
+        <title>simple Box Motion</title>
+    </head>
+    <body>
+    <button id="start"class="btn-success">start</button>
+    <div id="show">
+    <div class="container"> score:
+         <div id="score">0</div>
+    </div>
+    <div class="container display">
+         <canvas id="canvas1"></canvas>
+         <div id="box1"></div>
+    </div>
+    <div class=" keys"> 
+    <button class="btn-primary" id="top"onclick="moveup()"><i>UP<i></button>
+    
+    <button class="btn-primary"id="left" onclick="moveleft()"><i>LEFT<i></button>
+    <button class="btn-primary"id="right" onclick="moveright()"><i>RIGHT<i></button>
+      <br />
+    <button class="btn-primary"id="down" onclick="movedown()"><i>DOWN<i></button>
+     </div> 
+     </div> 
+     <script>
+         $("document").ready(function(){
+$("#start").on("click",function(){
+    $("#show").show(1000)
+    start();
+    $("#start").hide()
+});
+})
+
+function start()
+{ 
+
+var canvas=document.getElementById("canvas1");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+var c=canvas.getContext("2d");
+
+var x=Math.random()*innerWidth;
+var y=Math.random()*400;
+var radius=20;
+var dx=(Math.random()-0.5)*8;
+var dy=(Math.random()-0.5)*10;
+var sc=0;
+var idAnimationFrame;
+function score(){
+    sc++;
+    $("#score").html(sc);
+}
+var idscore=setInterval(score,100);
+function gameover(){
+    clearInterval(idscore);
+    cancelAnimationFrame(idAnimationFrame);
+    alert("GAME OVER\nYOUR SCORE IS:"+sc);
+    $("#show").hide()
+    $("#start").html("Play Again!")
+    $("#start").show()
+    
+}
+function distance(x1,y1,x2,y2){
+    let distanceX=x2-x1;
+    let distanceY=y2-y1;
+    return Math.sqrt(Math.pow(distanceX,2)+Math.pow(distanceY,2));
+}
+
+function animate(){
+idAnimationFrame=requestAnimationFrame(animate );
+c.clearRect(0,0,innerWidth ,innerHeight );
+c.beginPath();
+c.arc(x,y,radius,0,Math.PI*2,false);
+c.fill()
+c.fillStyle="red"
+c.stroke();
+c.closePath()
+
+
+let left=parseInt($("#box1").css("left"))
+let top=parseInt($("#box1").css("top"))
+let width=parseInt($("#box1").css("width"))
+let height=parseInt($("#box1").css("height"))
+let rx=((2*left+width)/2)
+let ry=((2*top+height)/2)
+var rr=distance(rx,ry,left,top)
+var minDistance=distance(x,y,rx,ry)
+
+ 
+if((x+radius>innerWidth)||(x-radius<0))
+ { dx=-dx;
+canvas.style.backgroundColor="skyblue";
+  }
+if(minDistance<rr+radius||y-radius<0)
+   {dy=-dy;
+   canvas.style.backgroundColor="rgba(0,33,31,.5)";
+   }
+else if(y+radius>innerHeight)
+  {
+    dy=-dy;
+    gameover();
+   } 
+   
+x+=dx;
+y+=dy;
+
+}
+
+animate();
+}
+
+function moveup(){
+
+    var x= document.getElementById("box1");
+    let y=getComputedStyle(x).getPropertyValue("top");
+    x.style.top=parseInt(y)-10+"px";
+    
+return;
+}
+
+function moveleft(){
+    
+    var x= document.getElementById("box1");
+    let y=getComputedStyle(x).getPropertyValue("left");
+    x.style.left=parseInt(y)-20+"px";
+    
+return;
+}
+
+function moveright(){
+    var x= document.getElementById("box1");
+    let y=getComputedStyle(x).getPropertyValue("left");
+    x.style.left=parseInt(y)+20+"px";
+    
+return;
+}
+function movedown(){
+    var x= document.getElementById("box1");
+    let y=getComputedStyle(x).getPropertyValue("top");
+    x.style.top=parseInt(y)+10+"px";
+    
+return;
+}
+
+
+     </script>
+    </body>
+</html>
